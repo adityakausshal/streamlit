@@ -1,6 +1,5 @@
 import streamlit as st
 import yfinance as yf
-import quantstats as qs
 import matplotlib.pyplot as plt
 
 # Function to get stock data from Yahoo Finance
@@ -18,20 +17,6 @@ def display_metrics(data):
     st.write(f"Average Daily Return: {data['Close'].pct_change().mean() * 100:.2f}%")
     st.write(f"Volatility (Standard Deviation): {data['Close'].pct_change().std() * 100:.2f}%")
     st.write(f"Max Drawdown: {((data['Close'].min() / data['Close'].max()) - 1) * 100:.2f}%")
-
-# Function to display Quantstats report or simple plots
-def display_quantstats_summary(data, symbol):
-    returns = data['Close'].pct_change().dropna()
-
-    # Show a rolling returns plot
-    st.write("### Rolling Returns")
-    fig, ax = plt.subplots()
-    qs.plots.rolling_returns(returns, ax=ax)
-    st.pyplot(fig)
-
-    # Show a simple summary
-    st.write("### QuantStats Summary")
-    st.write(qs.reports.metrics(returns))
 
 # Streamlit app
 st.title("Stock Data Viewer")
@@ -52,9 +37,6 @@ if symbol:
 
             # Display performance metrics
             display_metrics(data)
-
-            # Display the QuantStats summary
-            display_quantstats_summary(data, symbol)
         else:
             st.error("No data found for the entered symbol.")
     except Exception as e:
